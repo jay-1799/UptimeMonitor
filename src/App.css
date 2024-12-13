@@ -1,0 +1,115 @@
+body {
+  background-color: #121212;
+  color: #ffffff;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  text-align: center;
+}
+
+.app-header {
+  background-color: #1f1f1f;
+  padding: 20px;
+  color: #61dafb;
+}
+
+/* for side by side */
+/* .status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+} */
+.status-grid {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  gap: 20px; /* Add spacing between items */
+  /* align-items: center;  */
+  width: 100%;
+}
+
+/* .status-card {
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  background-color: #1e1e1e;
+} */
+.status-card {
+  width: 100%; /* Set a consistent width for the cards */
+  /* max-width: 1000px;  */
+  border: 1px solid #ccc; /* Optional: Add a border for visual clarity */
+  padding: 10px; /* Add padding inside the cards */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a shadow for better aesthetics */
+  border-radius: 8px; /* Optional: Round the corners */
+  text-align: center; /* Center the content within each card */
+}
+
+.operational {
+  color: #4caf50;
+}
+
+.down {
+  color: #f44336;
+}
+
+.app-footer {
+  margin-top: 20px;
+  background-color: #1f1f1f;
+  padding: 10px;
+  color: #61dafb;
+}
+
+.incident-logs {
+  margin-top: 20px;
+  text-align: left;
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #1e1e1e;
+}
+
+.incident-logs ul {
+  list-style: none;
+  padding: 0;
+}
+
+.incident-logs li {
+  margin: 10px 0;
+}
+
+.resolved {
+  color: #4caf50;
+}
+
+.unresolved {
+  color: #f44336;
+}
+
+.graphs {
+  margin: 20px 0;
+}
+
+.uptime-bar {
+  width: 100%;
+  height: 25px;
+  background-color: #333;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.uptime-fill {
+  height: 100%;
+  line-height: 25px;
+  color: white;
+  text-align: center;
+  border-radius: 12px 0 0 12px;
+}
+
+.service-link {
+  color: white;
+  font-size: 18px;
+}
