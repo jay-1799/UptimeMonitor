@@ -1,16 +1,6 @@
 // Static Frontend for Status Monitoring Dashboard with Dark Theme and Enhanced Features
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
 
 const UptimeBar = ({ uptime }) => {
   const uptimeColor =
@@ -34,7 +24,7 @@ const StatusCard = ({ serviceName, status, uptime }) => {
       <h3>{serviceName}</h3>
       <p>
         Status:{" "}
-        <span className={status === "Operational" ? "operational" : "down"}>
+        <span className={status === "Up" ? "operational" : "down"}>
           {status}
         </span>
       </p>
@@ -62,31 +52,51 @@ const IncidentLogs = ({ incidents }) => {
 };
 
 const App = () => {
-  const services = [
-    {
-      name: "jaypatel.link",
-      url: "https://jaypatel.link",
-      status: "Operational",
-      uptime: 99.9,
-    },
-    {
-      name: "magicdot.jaypatel.link",
-      url: "https://magicdot.jaypatel.link",
-      status: "Operational",
-      uptime: 98.7,
-    },
-  ];
-
   const incidents = [
     { message: "Server downtime", resolved: true },
     { message: "Database issue", resolved: false },
   ];
+  const [services, setServices] = useState([]);
 
-  const uptimeData = [
-    { name: "Jan", uptime: 99.5 },
-    { name: "Feb", uptime: 99.7 },
-    { name: "Mar", uptime: 98.9 },
-  ];
+  const fetchServiceStatus = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/status");
+      if (response.ok) {
+        const data = await response.json();
+        setServices(data);
+      } else {
+        console.error("Failed to fetch service statuses");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchServiceStatus();
+    const interval = setInterval(fetchServiceStatus, 3600);
+    return () => clearInterval(interval);
+  }, []);
+  // const services = [
+  //   {
+  //     name: "jaypatel.link",
+  //     url: "https://jaypatel.link",
+  //     status: "Operational",
+  //     uptime: 99.9,
+  //   },
+  //   {
+  //     name: "magicdot.jaypatel.link",
+  //     url: "https://magicdot.jaypatel.link",
+  //     status: "Operational",
+  //     uptime: 98.7,
+  //   },
+  // ];
+
+  // const uptimeData = [
+  //   { name: "Jan", uptime: 99.5 },
+  //   { name: "Feb", uptime: 99.7 },
+  //   { name: "Mar", uptime: 98.9 },
+  // ];
 
   return (
     <div className="app">
