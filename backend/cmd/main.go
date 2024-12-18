@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -35,7 +36,7 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 // Initialize database connection
 func initDB() *sql.DB {
-	connStr := "postgres://user:password@localhost:5432/uptime_db?sslmode=disable"
+	connStr := "postgres://postgres:password@postgres:5432/uptime_db?sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -107,7 +108,8 @@ func timeString(value int, unit string) string {
 	if value == 1 {
 		return "1 " + unit
 	}
-	return time.Duration(value).String()
+	// return time.Duration(value).String()
+	return strconv.Itoa(value) + " " + unit + "s"
 }
 
 func checkService(db *sql.DB, serviceName, url string) (string, string, error) {
@@ -120,12 +122,14 @@ func checkService(db *sql.DB, serviceName, url string) (string, string, error) {
 		}
 		return "Down", "0", nil
 	}
+	defer resp.Body.Close()
 	last_down, err := fetchLastDown(db, serviceName)
 	if err != nil {
 		return "", "", err
 	}
 	uptime := calculate_uptime(last_down)
 	return "Up", uptime, nil
+	// return "Up", "10 days", nil
 }
 
 func fetchLastDown(db *sql.DB, serviceName string) (time.Time, error) {
@@ -137,6 +141,7 @@ func fetchLastDown(db *sql.DB, serviceName string) (time.Time, error) {
 
 	err := db.QueryRow(query, serviceName).Scan(&lastDown)
 	if err != nil {
+		// panic(err)
 		if err == sql.ErrNoRows {
 			// No record found for the service
 			return time.Time{}, fmt.Errorf("no downtime record found for service: %s", serviceName)

@@ -6,3 +6,12 @@ CREATE TABLE uptime_logs (
     last_down TIMESTAMP,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO uptime_logs (service_name, url, status, last_down)
+VALUES
+    ('jaypatel', 'https://jaypatel.link', 'UP', '2024-11-15 10:30:00'),
+    ('https://magicdot.jaypatel.link', 'https://magicdot.jaypatel.link', 'DOWN', '2024-12-15 10:30:00'),
+    ('dev', 'https://dev.jaypatel.link', 'UP', '2023-12-15 10:30:00'),
+    ('app', 'https://app.jaypatel.link', 'DOWN', '2024-12-11 14:00:00'),
+    ('res', 'https://res.jaypatel.link', 'DOWN', '2024-12-10 14:00:00'),
+    ('uptime', 'https://uptime.jaypatel.link', 'DOWN', '2024-12-16 14:00:00');
