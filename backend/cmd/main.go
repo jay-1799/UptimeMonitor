@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -17,6 +18,13 @@ type ServiceStatus struct {
 	Url    string `json:"url"`
 	Status string `json:"status"`
 	Uptime string `json:"uptime"`
+}
+
+type MailData struct {
+	To      string
+	From    string
+	Subject string
+	Content template.HTML
 }
 
 func corsMiddleware(next http.Handler) http.Handler {

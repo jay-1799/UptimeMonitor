@@ -1,6 +1,58 @@
-// Static Frontend for Status Monitoring Dashboard with Dark Theme and Enhanced Features
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import {
+  Mail,
+  Slack,
+  MessageSquare,
+  MessageCircle,
+  Webhook,
+  Rss,
+  Atom,
+  Code,
+} from "lucide-react";
+
+const UpdatesDropdown = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const options = [
+    { icon: Mail, label: "Email" },
+    { icon: Slack, label: "Slack" },
+    { icon: MessageSquare, label: "Microsoft Teams" },
+    { icon: MessageCircle, label: "Google Chat" },
+    { icon: Webhook, label: "Webhook" },
+    { icon: Rss, label: "RSS" },
+    { icon: Atom, label: "Atom" },
+    { icon: Code, label: "API" },
+  ];
+
+  return (
+    <div className="updates-container">
+      <div
+        className="updates-dropdown"
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
+      >
+        <button className="updates-button">Get updates</button>
+
+        {isOpen && (
+          <div className="dropdown-menu">
+            <div className="dropdown-content" role="menu">
+              {options.map((option, index) => {
+                const Icon = option.icon;
+                return (
+                  <button key={index} className="dropdown-item" role="menuitem">
+                    <Icon className="dropdown-item-icon" />
+                    <span className="dropdown-item-text">{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const UptimeBar = ({ uptime }) => {
   const uptimeColor =
@@ -103,6 +155,7 @@ const App = () => {
       <header className="app-header">
         <h1>Status Monitoring Dashboard</h1>
       </header>
+      <UpdatesDropdown />
       <main className="app-main">
         <div className="status-grid">
           {services.map((service, index) => (
