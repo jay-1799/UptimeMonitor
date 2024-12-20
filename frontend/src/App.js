@@ -54,17 +54,81 @@ const UpdatesDropdown = () => {
   );
 };
 
-const UptimeBar = ({ uptime }) => {
-  const uptimeColor =
-    uptime > 98 ? "#4caf50" : uptime > 95 ? "#ffc107" : "#f44336";
+// const UptimeBar = ({ daysAgo = 30, uptimeDays = 30 }) => {
+//   // Generate array of days with true/false for "up" or "down" status
+//   const days = Array.from({ length: daysAgo }, (_, index) => {
+//     const isUp = index >= daysAgo - uptimeDays;
+//     return isUp;
+//   });
+
+//   return (
+//     <div className="uptime-bar">
+//       <div className="uptime-bar-header">
+//         <div className="uptime-bar-service">
+//           <div className="uptime-bar-status"></div>
+//           <span className="uptime-bar-name">Service Name</span>
+//         </div>
+//         <span className="uptime-bar-uptime">
+//           {((uptimeDays / daysAgo) * 100).toFixed(1)}% uptime
+//         </span>
+//       </div>
+
+//       <div className="uptime-bar-days">
+//         {days.map((isUp, index) => (
+//           <div
+//             key={index}
+//             className={`uptime-bar-day ${
+//               isUp ? "uptime-bar-up" : "uptime-bar-down"
+//             }`}
+//           />
+//         ))}
+//       </div>
+
+//       <div className="uptime-bar-footer">
+//         <span className="uptime-bar-label">{daysAgo} DAYS AGO</span>
+//         <span className="uptime-bar-label">TODAY</span>
+//       </div>
+//     </div>
+//   );
+// };
+const UptimeBar = ({ uptimePercentage }) => {
+  const downtimePercentage = 100 - uptimePercentage;
 
   return (
     <div className="uptime-bar">
-      <div
-        className="uptime-fill"
-        style={{ width: `${uptime}%`, backgroundColor: uptimeColor }}
-      >
-        {uptime}%
+      <div className="uptime-bars">
+        <svg
+          aria-hidden="true"
+          preserveAspectRatio="none"
+          viewBox="0 0 100 24"
+          height="24"
+          className="uptime-svg"
+        >
+          {/* Green uptime bar */}
+          <rect
+            aria-label={`Uptime: ${uptimePercentage}%`}
+            x="0"
+            y="0"
+            width={uptimePercentage}
+            height="24"
+            fill="#10b981" // Emerald green for uptime
+          ></rect>
+          {/* Grey downtime bar */}
+          <rect
+            aria-label={`Downtime: ${downtimePercentage}%`}
+            x={uptimePercentage}
+            y="0"
+            width={downtimePercentage}
+            height="24"
+            fill="#d1d5db" // Gray for downtime
+          ></rect>
+        </svg>
+      </div>
+      <div className="uptime-labels">
+        <span className="uptime-label uptime">{uptimePercentage}% Uptime</span>
+        <span className="uptime-label downtime">
+          {downtimePercentage}% Downtime
+        </span>
       </div>
     </div>
   );
@@ -80,7 +144,7 @@ const StatusCard = ({ serviceName, status, uptime }) => {
           {status}
         </span>
       </p>
-      <p>Uptime: {uptime}%</p>
+      <p>Uptime: {uptime}</p>
     </div>
   );
 };
@@ -126,29 +190,9 @@ const App = () => {
 
   useEffect(() => {
     fetchServiceStatus();
-    const interval = setInterval(fetchServiceStatus, 3600);
+    const interval = setInterval(fetchServiceStatus, 3600000);
     return () => clearInterval(interval);
   }, []);
-  // const services = [
-  //   {
-  //     name: "jaypatel.link",
-  //     url: "https://jaypatel.link",
-  //     status: "Operational",
-  //     uptime: 99.9,
-  //   },
-  //   {
-  //     name: "magicdot.jaypatel.link",
-  //     url: "https://magicdot.jaypatel.link",
-  //     status: "Operational",
-  //     uptime: 98.7,
-  //   },
-  // ];
-
-  // const uptimeData = [
-  //   { name: "Jan", uptime: 99.5 },
-  //   { name: "Feb", uptime: 99.7 },
-  //   { name: "Mar", uptime: 98.9 },
-  // ];
 
   return (
     <div className="app">
@@ -175,7 +219,13 @@ const App = () => {
                 status={service.status}
                 uptime={service.uptime}
               />
-              <UptimeBar uptime={service.uptime} />
+              {/* <UptimeBar uptime={service.uptime} /> */}
+              {/* <UptimeBar
+                daysAgo={30}
+                uptimeDays={28}
+                serviceName={service.name}
+              /> */}
+              <UptimeBar uptimePercentage={service.uptime_percent} />
             </div>
           ))}
         </div>
