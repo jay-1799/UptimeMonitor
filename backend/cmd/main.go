@@ -14,10 +14,13 @@ import (
 )
 
 type ServiceStatus struct {
-	Name   string `json:"name"`
-	Url    string `json:"url"`
-	Status string `json:"status"`
-	Uptime string `json:"uptime"`
+	Name            string        `json:"name"`
+	Url             string        `json:"url"`
+	Status          string        `json:"status"`
+	Uptime          string        `json:"uptime"`
+	Uptime_percent  string        `json:"uptime_percent"`
+	Uptime_duration time.Duration `json:"uptime_duration"`
+	Last_down       time.Time     `json:"last_down"`
 }
 
 type MailData struct {
@@ -53,15 +56,15 @@ func initDB() *sql.DB {
 }
 
 // Store service status in the database
-func storeServiceStatus(db *sql.DB, name, url, status string, uptime time.Duration) {
-	_, err := db.Exec(
-		"INSERT INTO uptime_logs (service_name, url, status, last_down) VALUES ($1, $2, $3, $4)",
-		name, url, status, uptime,
-	)
-	if err != nil {
-		log.Printf("Failed to store service status: %v", err)
-	}
-}
+// func storeServiceStatus(db *sql.DB, name, url, status string, uptime time.Duration) {
+// 	_, err := db.Exec(
+// 		"INSERT INTO uptime_logs (service_name, url, status, last_down) VALUES ($1, $2, $3, $4)",
+// 		name, url, status, uptime,
+// 	)
+// 	if err != nil {
+// 		log.Printf("Failed to store service status: %v", err)
+// 	}
+// }
 
 // Retrieve uptime data from the database
 func fetchUptimeData(db *sql.DB) []ServiceStatus {
@@ -82,14 +85,14 @@ func fetchUptimeData(db *sql.DB) []ServiceStatus {
 			log.Printf("Failed to scan row: %v", err)
 			continue
 		}
-		status.Uptime = calculate_uptime(last_down)
+		status.Uptime, _, _ = calculate_uptime(last_down)
 		// status.last_down = last_down
 		statuses = append(statuses, status)
 	}
 	return statuses
 }
 
-func calculate_uptime(last_down time.Time) string {
+func calculate_uptime(last_down time.Time) (string, string, time.Duration) {
 	current_time := time.Now()
 
 	uptime_duration := current_time.Sub(last_down)
@@ -99,7 +102,16 @@ func calculate_uptime(last_down time.Time) string {
 	hours := int(uptime_duration.Hours()) % 24
 	minutes := int(uptime_duration.Minutes()) % 60
 
-	return formatUptime(days, hours, minutes)
+	uptime_percent := calculate_uptime_percent(days)
+	return formatUptime(days, hours, minutes), uptime_percent, uptime_duration
+}
+
+func calculate_uptime_percent(days int) string {
+	if days < 30 {
+		ret := (days / 30) * 100
+		return strconv.Itoa(ret)
+	}
+	return "100"
 }
 
 func formatUptime(days, hours, minutes int) string {
@@ -120,23 +132,23 @@ func timeString(value int, unit string) string {
 	return strconv.Itoa(value) + " " + unit + "s"
 }
 
-func checkService(db *sql.DB, serviceName, url string) (string, string, error) {
-	client := &http.Client{Timeout: 5 * time.Second}
+func checkService(db *sql.DB, serviceName, url string) (string, string, string, time.Duration, time.Time, error) {
+	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		// todo: function to update downtime timestamp
 		if err := updateLastDown(db, serviceName); err != nil {
 			log.Printf("Error updating downtime for %s: %v", serviceName, err)
 		}
-		return "Down", "0", nil
+		return "Down", "0", "", 0 * time.Second, time.Now(), nil
 	}
 	defer resp.Body.Close()
 	last_down, err := fetchLastDown(db, serviceName)
 	if err != nil {
-		return "", "", err
+		return "", "", "", 0 * time.Second, time.Now(), err
 	}
-	uptime := calculate_uptime(last_down)
-	return "Up", uptime, nil
+	uptime, uptime_percent, uptime_duration := calculate_uptime(last_down)
+	return "Up", uptime, uptime_percent, uptime_duration, last_down, nil
 	// return "Up", "10 days", nil
 }
 
@@ -172,27 +184,6 @@ func updateLastDown(db *sql.DB, serviceName string) error {
 	return nil
 }
 
-// func statusHandler(w http.ResponseWriter, r *http.Request) {
-// 	// w.Header().Set("Access-Control-Allow-Origin", "*")
-// 	w.Header().Set("Content-type", "application/json")
-
-// 	services := map[string]string{
-// 		"jaypatel": "https://jaypatel.link",
-// 		"magicdot": "https://magicdot.jaypatel.link",
-// 		"dev":      "https://dev.jaypatel.link",
-// 		"app":      "https://app.jaypatel.link",
-// 		"res":      "https://res.jaypatel.link",
-// 		"uptime":   "https://uptime.jaypatel.link",
-// 	}
-
-//		var statuses []ServiceStatus
-//		for name, url := range services {
-//			status := checkService(url)
-//			uptime := "99.1"
-//			statuses = append(statuses, ServiceStatus{Name: name, Url: url, Status: status, Uptime: uptime})
-//		}
-//		json.NewEncoder(w).Encode(statuses)
-//	}
 func statusHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -208,9 +199,9 @@ func statusHandler(db *sql.DB) http.HandlerFunc {
 
 		var statuses []ServiceStatus
 		for name, url := range services {
-			status, uptime, _ := checkService(db, name, url)
+			status, uptime, uptime_percent, uptime_duration, last_down, _ := checkService(db, name, url)
 
-			statuses = append(statuses, ServiceStatus{Name: name, Url: url, Status: status, Uptime: uptime})
+			statuses = append(statuses, ServiceStatus{Name: name, Url: url, Status: status, Uptime: uptime, Uptime_percent: uptime_percent, Uptime_duration: uptime_duration, Last_down: last_down})
 
 			// Store in the database
 			// storeServiceStatus(db, name, url, status, uptime)
