@@ -29,17 +29,6 @@ func (m *Mail) Send(to, subject, plainText, htmlText string) error {
 	msg.WriteString("Content-Type: text/html; charset=\"UTF-8\"\n\n")
 	msg.WriteString("htmlText")
 
-	// iPort := strconv.Itoa(m.Port)
-	// host := m.Host + ":" + iPort
-
-	// err := smtp.SendMail(
-	// 	m.Host+":"+strconv.Itoa(m.Port),
-	// 	auth,
-	// 	m.FromAddress,
-	// 	[]string{to},
-	// 	msg.Bytes(),
-	// )
-	//
 	log.Printf("Attempting to connect to SMTP server %s on port %d", m.Host, m.Port)
 	server := mail.NewSMTPClient()
 	server.Host = m.Host
@@ -64,26 +53,14 @@ func (m *Mail) Send(to, subject, plainText, htmlText string) error {
 
 	email.SetBody(mail.TextPlain, plainText)
 	email.AddAlternative(mail.TextHTML, htmlText)
-	// if len(msg.Attachments) > 0 {
-	// 	for _, x := range msg.Attachments {
-	// 		email.AddAttachment(x)
 
-	// 	}
-	// }
 	err = email.Send(smtpClient)
 	if err != nil {
 		log.Println("Error2 sending email:", err)
 		return err
 	}
 	return nil
-	//
 
-	// if err != nil {
-	// 	log.Println("Error sending email:", err)
-	// 	return err
-	// }
-	// log.Println("Email sent successfully to", to)
-	// return nil
 }
 
 // //////////
