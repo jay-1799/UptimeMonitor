@@ -24,10 +24,18 @@ services:
       DB_USER: postgres
       DB_PASSWORD: password
       DB_NAME: uptime_db
+      MAIL_DOMAIN: "example.com"
+      MAIL_HOST: "mailhog"
+      MAIL_PORT: "1025"
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      MAIL_FROM_NAME: "Uptime Notifier"
+      MAIL_FROM_ADDRESS: "no-reply@uptime.com"
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+      - mailhog
 
   frontend:
     build:
@@ -38,7 +46,7 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-  
+
   mailhog:
     image: "mailhog/mailhog:latest"
     ports:
