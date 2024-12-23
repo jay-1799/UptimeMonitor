@@ -13,6 +13,7 @@ import {
 
 const UpdatesDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
 
   const options = [
     { icon: Mail, label: "Email" },
@@ -24,6 +25,12 @@ const UpdatesDropdown = () => {
     { icon: Atom, label: "Atom" },
     { icon: Code, label: "API" },
   ];
+  const handleOptionClick = (label) => {
+    if (label === "Email") {
+      setShowEmailForm(true);
+      setIsOpen(false);
+    }
+  };
 
   return (
     <div className="updates-container">
@@ -32,15 +39,30 @@ const UpdatesDropdown = () => {
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
       >
-        <button className="updates-button">Get updates</button>
+        <button
+          className="updates-button"
+          onMouseEnter={() => setIsOpen(true)}
+          onMouseLeave={() => setIsOpen(false)}
+        >
+          Get updates
+        </button>
 
         {isOpen && (
-          <div className="dropdown-menu">
+          <div
+            className="dropdown-menu"
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => setIsOpen(false)}
+          >
             <div className="dropdown-content" role="menu">
               {options.map((option, index) => {
                 const Icon = option.icon;
                 return (
-                  <button key={index} className="dropdown-item" role="menuitem">
+                  <button
+                    key={index}
+                    className="dropdown-item"
+                    role="menuitem"
+                    onClick={() => handleOptionClick(option.label)}
+                  >
                     <Icon className="dropdown-item-icon" />
                     <span className="dropdown-item-text">{option.label}</span>
                   </button>
@@ -49,6 +71,81 @@ const UpdatesDropdown = () => {
             </div>
           </div>
         )}
+      </div>
+      {showEmailForm && (
+        <EmailSubscriptionForm onClose={() => setShowEmailForm(false)} />
+      )}
+    </div>
+  );
+};
+
+const EmailSubscriptionForm = ({ onClose }) => {
+  const [emailValue, setEmailValue] = useState("");
+  const [subscriptionType, setSubscriptionType] = useState("all");
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <div className="modal-header">
+          <Mail className="modal-icon" />
+          <h2 className="modal-title">Get status updates</h2>
+        </div>
+
+        <div className="form-container">
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">
+              Email address
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={emailValue}
+              onChange={(e) => setEmailValue(e.target.value)}
+              className="form-input"
+              placeholder="you@yourdomain.com"
+            />
+          </div>
+
+          <div className="radio-group">
+            <label className="radio-label">
+              <input
+                type="radio"
+                checked={subscriptionType === "all"}
+                onChange={() => setSubscriptionType("all")}
+                className="radio-input"
+              />
+              <span className="radio-text">Get all status updates</span>
+            </label>
+
+            <label className="radio-label">
+              <input
+                type="radio"
+                checked={subscriptionType === "specific"}
+                onChange={() => setSubscriptionType("specific")}
+                className="radio-input"
+              />
+              <span className="radio-text">Only specific components</span>
+            </label>
+          </div>
+
+          <button className="submit-button">Subscribe</button>
+        </div>
+
+        <button onClick={onClose} className="close-button">
+          <svg
+            className="close-icon"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
