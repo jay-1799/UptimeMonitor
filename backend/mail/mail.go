@@ -29,13 +29,14 @@ func (m *Mail) Send(to, subject, plainText, htmlText string) error {
 	msg.WriteString("Content-Type: text/html; charset=\"UTF-8\"\n\n")
 	msg.WriteString("htmlText")
 
-	log.Printf("Attempting to connect to SMTP server %s on port %d", m.Host, m.Port)
+	log.Printf("Attempting to connect to SMTP server %s on port %d with %s encryption", m.Host, m.Port, m.Encryption)
 	server := mail.NewSMTPClient()
 	server.Host = m.Host
 	server.Port = m.Port
 	server.Username = m.Username
 	server.Password = m.Password
 	server.Encryption = m.getEncryption(m.Encryption)
+	// server.Encryption = mail.EncryptionSTARTTLS
 	server.KeepAlive = false
 	server.ConnectTimeout = 10 * time.Second
 	server.SendTimeout = 10 * time.Second

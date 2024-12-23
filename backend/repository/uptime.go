@@ -78,3 +78,13 @@ func FetchUptimeData(db *sql.DB) []models.ServiceStatus {
 // 		log.Printf("Failed to store service status: %v", err)
 // 	}
 // }
+
+func AddSubscriber(db *sql.DB, emailID string) error {
+	_, err := db.Exec(
+		"INSERT INTO subscribers (email_id) VALUES ($1)", emailID,
+	)
+	if err != nil {
+		log.Printf("Failed to add email id: %v", err)
+	}
+	return err
+}

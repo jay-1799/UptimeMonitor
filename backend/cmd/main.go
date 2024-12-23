@@ -32,11 +32,13 @@ func main() {
 		Password:    os.Getenv("MAIL_PASSWORD"),
 		FromName:    os.Getenv("MAIL_FROM_NAME"),
 		FromAddress: os.Getenv("MAIL_FROM_ADDRESS"),
+		Encryption:  os.Getenv("MAIL_ENCRYPTION"),
 	}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/status", handlers.StatusHandler(db))
 	mux.HandleFunc("/history", handlers.HistoryHandler(db))
+	mux.HandleFunc("/add-subscriber", handlers.SubscriberHandler(db))
 
 	mailHandler := &handlers.MailHandler{Mailer: mailConfig}
 	mux.HandleFunc("/send-mail", mailHandler.SendMail)
