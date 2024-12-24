@@ -15,12 +15,13 @@ type MailHandler struct {
 }
 
 type Message struct {
-	From     string `json:"from"`
-	FromName string `json:"fromname"`
-	To       string `json:"to"`
-	Subject  string `json:"subject"`
-	Service  string `json:"service"`
-	DataMap  map[string]any
+	From         string         `json:"from"`
+	FromName     string         `json:"fromname"`
+	To           string         `json:"to"`
+	Subject      string         `json:"subject"`
+	Service      string         `json:"service"`
+	TemplateName string         `json:"template_name"`
+	DataMap      map[string]any `json:"data_map"`
 }
 
 func (mh *MailHandler) SendMail(w http.ResponseWriter, r *http.Request) {
@@ -38,17 +39,19 @@ func (mh *MailHandler) SendMail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.DataMap = map[string]any{
-		"service": req.Service,
-	}
+	// req.DataMap = map[string]any{
+	// 	"service": req.Service,
+	// }
+	plainTextTemplate := "/app/mail/templates/" + req.TemplateName + ".plain.gohtml"
+	htmlTemplate := "/app/mail/templates/" + req.TemplateName + ".html.gohtml"
 
-	plainText, err := mh.buildPlainTextMessage(req)
+	plainText, err := mh.buildPlainTextMessage(plainTextTemplate, req.DataMap)
 	if err != nil {
 		panic(err)
 		// http.Error(w, "Failed to build plain text message", http.StatusInternalServerError)
 		// return
 	}
-	htmlText, err := mh.buildHTMLMessage(req)
+	htmlText, err := mh.buildHTMLMessage(htmlTemplate, req.DataMap)
 	if err != nil {
 		http.Error(w, "Failed to build HTML message", http.StatusInternalServerError)
 		return
@@ -65,20 +68,20 @@ func (mh *MailHandler) SendMail(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Email sent successfully"))
 }
 
-func (mh *MailHandler) buildHTMLMessage(msg Message) (string, error) {
-	templateToRender := "/app/mail/templates/mail.html.gohtml"
+func (mh *MailHandler) buildHTMLMessage(templateToRender string, data map[string]any) (string, error) {
+	// templateToRender := "/app/mail/templates/mail.html.gohtml"
 	// "../mail/templates/mail.html.gohtml"
 
 	t, err := template.New("email-html").ParseFiles(templateToRender)
 	if err != nil {
 		return "", err
 	}
-	msg.DataMap = map[string]any{
-		"service": msg.Service,
-	}
+	// msg.DataMap = map[string]any{
+	// 	"service": msg.Service,
+	// }
 
 	var tpl bytes.Buffer
-	if err = t.ExecuteTemplate(&tpl, "body", msg.DataMap); err != nil {
+	if err = t.ExecuteTemplate(&tpl, "body", data); err != nil {
 		return "", err
 	}
 
@@ -91,8 +94,8 @@ func (mh *MailHandler) buildHTMLMessage(msg Message) (string, error) {
 	return formattedMessage, nil
 }
 
-func (mh *MailHandler) buildPlainTextMessage(msg Message) (string, error) {
-	templateToRender := "/app/mail/templates/mail.plain.gohtml"
+func (mh *MailHandler) buildPlainTextMessage(templateToRender string, data map[string]any) (string, error) {
+	// templateToRender := "/app/mail/templates/mail.plain.gohtml"
 	// "../mail/templates/mail.plain.gohtml"
 
 	t, err := template.New("email-plain").ParseFiles(templateToRender)
@@ -101,7 +104,7 @@ func (mh *MailHandler) buildPlainTextMessage(msg Message) (string, error) {
 	}
 
 	var tpl bytes.Buffer
-	if err = t.ExecuteTemplate(&tpl, "body", msg.DataMap); err != nil {
+	if err = t.ExecuteTemplate(&tpl, "body", data); err != nil {
 		return "", err
 	}
 
