@@ -399,6 +399,7 @@ body {
   right: 1rem;
   color: #9ca3af;
   transition: color 0.2s;
+  margin-top: 15px;
 }
 
 .close-button:hover {

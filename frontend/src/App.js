@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import {
   Mail,
-  Slack,
-  MessageSquare,
-  MessageCircle,
-  Webhook,
-  Rss,
-  Atom,
+  // Slack,
+  // MessageSquare,
+  // MessageCircle,
+  // Webhook,
+  // Rss,
+  // Atom,
   Code,
 } from "lucide-react";
 
@@ -17,12 +17,12 @@ const UpdatesDropdown = () => {
 
   const options = [
     { icon: Mail, label: "Email" },
-    { icon: Slack, label: "Slack" },
-    { icon: MessageSquare, label: "Microsoft Teams" },
-    { icon: MessageCircle, label: "Google Chat" },
-    { icon: Webhook, label: "Webhook" },
-    { icon: Rss, label: "RSS" },
-    { icon: Atom, label: "Atom" },
+    // { icon: Slack, label: "Slack" },
+    // { icon: MessageSquare, label: "Microsoft Teams" },
+    // { icon: MessageCircle, label: "Google Chat" },
+    // { icon: Webhook, label: "Webhook" },
+    // { icon: Rss, label: "RSS" },
+    // { icon: Atom, label: "Atom" },
     { icon: Code, label: "API" },
   ];
   const handleOptionClick = (label) => {
@@ -81,7 +81,39 @@ const UpdatesDropdown = () => {
 
 const EmailSubscriptionForm = ({ onClose }) => {
   const [emailValue, setEmailValue] = useState("");
-  const [subscriptionType, setSubscriptionType] = useState("all");
+  // const [subscriptionType, setSubscriptionType] = useState("all");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!emailValue || !validateEmail(emailValue)) {
+      alert("please enter valid email address");
+      return;
+    }
+    setEmailValue("");
+    try {
+      const response = await fetch("http://localhost:8080/add-subscriber", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emailID: emailValue }),
+      });
+      if (response.ok) {
+        alert("successfully subscribed!");
+      } else {
+        alert("Failed to subscribe.");
+      }
+      setEmailValue("");
+    } catch (error) {
+      console.error("Error during subscription:", error);
+      alert("An error occured. Please try again.");
+    }
+  };
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   return (
     <div className="modal-overlay">
@@ -106,7 +138,7 @@ const EmailSubscriptionForm = ({ onClose }) => {
             />
           </div>
 
-          <div className="radio-group">
+          {/* <div className="radio-group">
             <label className="radio-label">
               <input
                 type="radio"
@@ -126,9 +158,11 @@ const EmailSubscriptionForm = ({ onClose }) => {
               />
               <span className="radio-text">Only specific components</span>
             </label>
-          </div>
+          </div> */}
 
-          <button className="submit-button">Subscribe</button>
+          <button className="submit-button" onClick={handleSubmit}>
+            Subscribe
+          </button>
         </div>
 
         <button onClick={onClose} className="close-button">
