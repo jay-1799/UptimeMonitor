@@ -7,6 +7,10 @@ CREATE TABLE uptime_logs (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE subscribers (
+    email_id VARCHAR(255) PRIMARY KEY
+);
+
 INSERT INTO uptime_logs (service_name, url, status, last_down)
 VALUES
     ('jaypatel', 'https://jaypatel.link', 'UP', '2024-11-15 10:30:00'),
