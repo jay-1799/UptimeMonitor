@@ -35,3 +35,25 @@ func VerifySubscriber(db *sql.DB, token string) (string, error) {
 	}
 	return email, err
 }
+
+func FetchAllSubscribers(db *sql.DB) ([]string, error) {
+	query := `SELECT email FROM subscribers WHERE is_verified=true;`
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var emails []string
+	for rows.Next() {
+		var email string
+		if err := rows.Scan(&email); err != nil {
+			return nil, err
+		}
+		emails = append(emails, email)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return emails, nil
+}

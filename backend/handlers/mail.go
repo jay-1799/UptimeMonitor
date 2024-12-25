@@ -6,22 +6,13 @@ import (
 	"net/http"
 	"text/template"
 	"uptime/mail"
+	"uptime/models"
 
 	"github.com/vanng822/go-premailer/premailer"
 )
 
 type MailHandler struct {
 	Mailer *mail.Mail
-}
-
-type Message struct {
-	From         string         `json:"from"`
-	FromName     string         `json:"fromname"`
-	To           string         `json:"to"`
-	Subject      string         `json:"subject"`
-	Service      string         `json:"service"`
-	TemplateName string         `json:"template_name"`
-	DataMap      map[string]any `json:"data_map"`
 }
 
 func (mh *MailHandler) SendMail(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +22,7 @@ func (mh *MailHandler) SendMail(w http.ResponseWriter, r *http.Request) {
 	// 	Message string `json:"message"`
 	// 	Service string `json:"service`
 	// }
-	var req Message
+	var req models.Message
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {

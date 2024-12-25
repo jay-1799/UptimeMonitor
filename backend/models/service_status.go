@@ -21,3 +21,13 @@ type MailData struct {
 	Subject string
 	Content template.HTML
 }
+
+type Message struct {
+	From         string         `json:"from"`
+	FromName     string         `json:"fromname"`
+	To           string         `json:"to"`
+	Subject      string         `json:"subject"`
+	Service      string         `json:"service"`
+	TemplateName string         `json:"template_name"`
+	DataMap      map[string]any `json:"data_map"`
+}

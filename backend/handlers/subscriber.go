@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"uptime/models"
 	"uptime/repository"
 )
 
@@ -39,7 +40,7 @@ func SubscriberHandler(db *sql.DB) http.HandlerFunc {
 
 		//send the verification link
 		verificationLink := fmt.Sprintf("http://localhost:8080/verify-subscriber?token=%s", token)
-		mailRequest := Message{
+		mailRequest := models.Message{
 			To:           requestData.EmailID,
 			Subject:      "Verify Your Subscription",
 			TemplateName: "activation",
