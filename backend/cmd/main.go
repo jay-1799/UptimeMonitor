@@ -5,10 +5,12 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 	"uptime/db"
 	"uptime/handlers"
 	"uptime/mail"
 	"uptime/middlewares"
+	"uptime/services"
 
 	_ "github.com/lib/pq"
 )
@@ -34,6 +36,13 @@ func main() {
 		FromAddress: os.Getenv("MAIL_FROM_ADDRESS"),
 		Encryption:  os.Getenv("MAIL_ENCRYPTION"),
 	}
+
+	scheduler := services.NewScheduler()
+	scheduler.AddJob(1*time.Minute, func() {
+		log.Println("Performing task")
+		services.PerformPeriodicTask(db)
+	})
+	scheduler.StartScheduler()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/status", handlers.StatusHandler(db))
