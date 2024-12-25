@@ -7,8 +7,17 @@ CREATE TABLE uptime_logs (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- CREATE TABLE subscribers (
+--     email_id VARCHAR(255) PRIMARY KEY
+-- );
+
 CREATE TABLE subscribers (
-    email_id VARCHAR(255) PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    is_verified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO uptime_logs (service_name, url, status, last_down)
