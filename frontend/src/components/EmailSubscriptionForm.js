@@ -26,7 +26,7 @@ const EmailSubscriptionForm = ({ onClose }) => {
         body: JSON.stringify({ emailID: emailValue }),
       });
       if (response.ok) {
-        alert("successfully subscribed!");
+        alert("Check your inbox for activation link!");
       } else {
         alert("Failed to subscribe.");
       }

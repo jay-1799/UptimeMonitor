@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"time"
 )
 
 func AddSubscriber(db *sql.DB, emailID string) error {
@@ -26,14 +27,49 @@ func AddSubscriberToken(db *sql.DB, emailID string, token string) error {
 	return err
 }
 
+const tokenExpirationDuration = 15 * time.Minute
+
 func VerifySubscriber(db *sql.DB, token string) (string, error) {
-	query := `UPDATE subscribers SET is_verified = true, updated_at=NOW() WHERE token=$1 RETURNING email;`
 	var email string
-	err := db.QueryRow(query, token).Scan(&email)
+	var createdAt time.Time
+
+	err := db.QueryRow(`
+		SELECT email, created_at
+		FROM subscribers
+		WHERE token = $1
+		AND is_verified = false`,
+		token,
+	).Scan(&email, &createdAt)
+
 	if err == sql.ErrNoRows {
-		return "", errors.New("invalid or expired token")
+		return "", errors.New("invalid token")
 	}
-	return email, err
+	if err != nil {
+		return "", err
+	}
+
+	if time.Since(createdAt) > tokenExpirationDuration {
+		return "", errors.New("token has expired")
+	}
+
+	_, err = db.Exec(`
+		UPDATE subscribers
+		SET is_verified = true,
+			updated_at = CURRENT_TIMESTAMP
+		WHERE token = $1`,
+		token)
+
+	if err != nil {
+		return "", err
+	}
+	return email, nil
+	// query := `UPDATE subscribers SET is_verified = true, updated_at=NOW() WHERE token=$1 RETURNING email;`
+	// var email string
+	// err := db.QueryRow(query, token).Scan(&email)
+	// if err == sql.ErrNoRows {
+	// 	return "", errors.New("invalid or expired token")
+	// }
+	// return email, err
 }
 
 func FetchAllSubscribers(db *sql.DB) ([]string, error) {

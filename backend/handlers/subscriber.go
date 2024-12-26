@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"uptime/models"
 	"uptime/repository"
@@ -39,14 +40,20 @@ func SubscriberHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		//send the verification link
+		email := requestData.EmailID
+		log.Print(requestData.EmailID)
 		verificationLink := fmt.Sprintf("http://localhost:8080/verify-subscriber?token=%s", token)
 		mailRequest := models.Message{
-			To:           requestData.EmailID,
-			Subject:      "Verify Your Subscription",
+			To:           email,
 			TemplateName: "activation",
-			DataMap:      map[string]any{"activation_link": verificationLink},
+			DataMap: map[string]any{
+				"activation_link": verificationLink,
+			},
 		}
-		mailRequestBytes, _ := json.Marshal(mailRequest)
+		mailRequestBytes, err := json.Marshal(mailRequest)
+		if err != nil {
+			panic(err)
+		}
 		req, err := http.NewRequest("POST", "http://localhost:8080/send-mail", bytes.NewReader(mailRequestBytes))
 		if err != nil {
 			http.Error(w, "failed to create request to SendMail", http.StatusInternalServerError)
@@ -67,12 +74,7 @@ func SubscriberHandler(db *sql.DB) http.HandlerFunc {
 			return
 			// panic(err)
 		}
-
-		// err = repository.AddSubscriber(db, requestData.EmailID)
-		// if err != nil {
-		// 	http.Error(w, "Failed to add subscriber", http.StatusInternalServerError)
-		// 	return
-		// }
+		log.Printf("email sent successfully to %s", email)
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"verification email sent"}`))
 	}

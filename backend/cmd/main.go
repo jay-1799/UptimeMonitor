@@ -38,7 +38,7 @@ func main() {
 	}
 
 	scheduler := services.NewScheduler()
-	scheduler.AddJob(1*time.Minute, func() {
+	scheduler.AddJob(90*time.Minute, func() {
 		log.Println("Performing task")
 		services.PerformPeriodicTask(db)
 	})
