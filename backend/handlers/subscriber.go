@@ -33,9 +33,15 @@ func SubscriberHandler(db *sql.DB) http.HandlerFunc {
 			// panic(err)
 		}
 		// save the token to database
-		err = repository.AddSubscriberToken(db, requestData.EmailID, token)
+		msg, err := repository.AddSubscriberToken(db, requestData.EmailID, token)
 		if err != nil {
 			http.Error(w, "Failed to add subscriber token", http.StatusInternalServerError)
+			return
+		}
+		if msg == fmt.Sprintf("email %s is already verified", requestData.EmailID) {
+			log.Printf("Email %s is already verified. Skipping email sending.", requestData.EmailID)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(`{"message":"user is already verified, no email sent"}`))
 			return
 		}
 
