@@ -1,5 +1,5 @@
 body {
-  background-color: #121212;
+  background-color: #0b0b0b;
   color: #ffffff;
   margin: 0;
   font-family: Arial, sans-serif;
@@ -10,66 +10,76 @@ body {
 }
 
 .app-header {
-  background-color: #1f1f1f;
+  background-color: #074d42;
   padding: 20px;
-  color: #61dafb;
+  color: #ffffff;
 }
 
 .status-grid {
   display: flex;
   flex-direction: column; /* Stack items vertically */
   gap: 20px; /* Add spacing between items */
-  /* align-items: center;  */
+  align-items: center;
   width: 100%;
 }
 
 .status-card {
-  width: 100%;
-  border: 1px solid #ccc;
+  width: 80%;
+  /* border: 1px solid #ccc; */
+  border: 1px solid #000000;
   padding: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 4px 6px #0b0b0b;
+  border-radius: 20px;
   text-align: center;
+  /* text-align: left; */
+
+  margin: 0 auto; /* Horizontally centers the card */
+  display: block;
+}
+.status-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.service-name {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.status-icon {
+  margin-right: 8px;
+}
+
+.status-icon.green {
+  color: green;
+}
+
+.status-icon.red {
+  color: red;
+}
+.uptime-percentage {
+  margin-left: auto;
+  padding-left: 290px;
+  font-size: 0.9em;
+  color: #ffffff;
+}
+.uptime-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 18;
+  /* font-weight: 700; */
+  color: #ffffff;
+  /* color: #00463b; */
 }
 
 .operational {
-  color: #4caf50;
+  color: #00463b;
 }
 
 .down {
-  color: #f44336;
-}
-
-.app-footer {
-  margin-top: 20px;
-  background-color: #1f1f1f;
-  padding: 10px;
-  color: #61dafb;
-}
-
-.incident-logs {
-  margin-top: 20px;
-  text-align: left;
-  padding: 20px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  background-color: #1e1e1e;
-}
-
-.incident-logs ul {
-  list-style: none;
-  padding: 0;
-}
-
-.incident-logs li {
-  margin: 10px 0;
-}
-
-.resolved {
-  color: #4caf50;
-}
-
-.unresolved {
   color: #f44336;
 }
 
@@ -115,16 +125,18 @@ body {
 
 .updates-button {
   padding: 0.5rem 1rem;
-  color: white;
-  background-color: rgb(24, 24, 27);
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: rgb(255, 255, 255);
+  background-color: #242424;
+  border-radius: 0.6rem;
+  border: none; /* Remove border */
+  outline: none;
+  font-size: 1.1rem;
+  font-weight: 700;
   transition: background-color 0.2s;
-  width: auto; /* Ensure width adjusts to content */
-  white-space: nowrap; /* Prevent text wrapping */
-  display: inline-flex; /* Aligns content and prevents unnecessary width */
-  align-items: center; /* Centers child components vertically */
+  width: auto;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -162,13 +174,13 @@ body {
 }
 
 .dropdown-item-icon {
-  color: rgb(14, 14, 230);
+  color: rgb(0, 0, 0);
   width: 1.25rem;
   height: 1.25rem;
 }
 
 .dropdown-item-text {
-  color: rgb(14, 14, 236);
+  color: rgb(0, 0, 0);
   font-size: 1rem;
   font-weight: 400;
 }
@@ -205,7 +217,7 @@ body {
 }
 
 .uptime {
-  color: #10b981; /* emerald-500 */
+  color: #00463b; /* emerald-500 */
 }
 
 .downtime {
@@ -225,7 +237,7 @@ body {
 }
 
 .modal-container {
-  background-color: #18181b;
+  background-color: #0b0b0b;
   border-radius: 0.5rem;
   padding: 2rem;
   width: 100%;
@@ -360,9 +372,43 @@ body {
   rx: 1;
 }
 .uptime-bar-rect.active {
-  fill: #14d433; /* Green */
+  /* fill: #00463b; Green */
+  fill: #074d42;
 }
 
 .uptime-bar-rect.inactive {
   fill: #a3a3a3; /* Gray */
+}
+
+.app-footer {
+  margin-top: 20px;
+  background-color: #0b0b0b;
+  padding: 10px;
+  color: #00463b;
+}
+
+.incident-logs {
+  margin-top: 20px;
+  text-align: left;
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #0b0b0b;
+}
+
+.incident-logs ul {
+  list-style: none;
+  padding: 0;
+}
+
+.incident-logs li {
+  margin: 10px 0;
+}
+
+.resolved {
+  color: #00463b;
+}
+
+.unresolved {
+  color: #f44336;
 }

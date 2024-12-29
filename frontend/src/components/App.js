@@ -4,7 +4,7 @@ import "../App.css";
 import UpdatesDropdown from "./UpdatesDropdown";
 import StatusCard from "./StatusCard";
 import IncidentLogs from "./IncidentLogs";
-import UptimeBar from "./UptimeBar";
+// import UptimeBar from "./UptimeBar";
 
 const App = () => {
   const incidents = [
@@ -42,26 +42,25 @@ const App = () => {
       <main className="app-main">
         <div className="status-grid">
           {services.map((service, index) => (
-            <>
-              <div key={index}>
-                <StatusCard
-                  // serviceName={service.name}
-                  serviceName={
-                    <a
-                      href={service.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="service-link"
-                    >
-                      {service.name}
-                    </a>
-                  }
-                  status={service.status}
-                  uptime={service.uptime}
-                />
-                <UptimeBar uptimePercentage={service.uptime_percent} />
-              </div>
-            </>
+            <div key={index}>
+              <StatusCard
+                // serviceName={service.name}
+                serviceName={
+                  <a
+                    href={service.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="service-link"
+                  >
+                    {service.name}
+                  </a>
+                }
+                status={service.status}
+                uptime={service.uptime}
+                uptimePercentage={service.uptime_percent}
+              />
+              {/* <UptimeBar uptimePercentage={service.uptime_percent} /> */}
+            </div>
           ))}
         </div>
         <IncidentLogs incidents={incidents} />
