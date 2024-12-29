@@ -42,35 +42,30 @@ const App = () => {
       <main className="app-main">
         <div className="status-grid">
           {services.map((service, index) => (
-            <div key={index}>
-              <StatusCard
-                // serviceName={service.name}
-                serviceName={
-                  <a
-                    href={service.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="service-link"
-                  >
-                    {service.name}
-                  </a>
-                }
-                status={service.status}
-                uptime={service.uptime}
-              />
-              {/* <UptimeBar uptime={service.uptime} /> */}
-              {/* <UptimeBar
-                daysAgo={30}
-                uptimeDays={28}
-                serviceName={service.name}
-              /> */}
-              <UptimeBar uptimePercentage={service.uptime_percent} />
-            </div>
+            <>
+              <div key={index}>
+                <StatusCard
+                  // serviceName={service.name}
+                  serviceName={
+                    <a
+                      href={service.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="service-link"
+                    >
+                      {service.name}
+                    </a>
+                  }
+                  status={service.status}
+                  uptime={service.uptime}
+                />
+                <UptimeBar uptimePercentage={service.uptime_percent} />
+              </div>
+            </>
           ))}
         </div>
         <IncidentLogs incidents={incidents} />
       </main>
-
       <footer className="app-footer">
         <p>&copy; 2024 Jay Patel</p>
       </footer>

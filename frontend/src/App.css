@@ -173,77 +173,6 @@ body {
   font-weight: 400;
 }
 
-/* new uptime bar  */
-/* .uptime-bar {
-  display: flex;
-  height: 25px; 
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.uptime-bar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.uptime-bar-service {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.uptime-bar-status {
-  width: 1rem;
-  height: 1rem;
-  background-color: #10b981; 
-  border-radius: 50%;
-}
-
-.uptime-bar-name {
-  font-size: 0.875rem; 
-  font-weight: 500;
-}
-
-.uptime-bar-uptime {
-  font-size: 0.875rem; 
-  color: #10b981; 
-  font-weight: 500; 
-}
-
-.uptime-bar-days {
-  display: flex;
-  gap: 0.25rem; 
-}
-
-.uptime-bar-day {
-  flex: 1;
-  height: 2rem; 
-  border-radius: 0.125rem; 
-}
-
-.uptime-bar-up {
-  background-color: #10b981; 
-  flex: 1;
-  visibility: visible;
-}
-
-.uptime-bar-down {
-  background-color: #d1d5db; 
-  flex: 1;
-  visibility: visible;
-}
-
-.uptime-bar-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.25rem; 
-}
-.uptime-bar-label {
-  font-size: 0.75rem; 
-  color: #6b7280; 
-} */
 .uptime-bar {
   width: 100%;
   max-width: 48rem;
@@ -409,4 +338,31 @@ body {
 .close-icon {
   width: 1.5rem;
   height: 1.5rem;
+}
+
+/* /////////////////////////// */
+.uptime-bar-container {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem; /* Equivalent to text-sm */
+  color: #9ca3af; /* Equivalent to text-gray-400 */
+}
+
+.uptime-bar-svg {
+  width: 600px;
+  /* width: 150%; */
+}
+
+.uptime-bar-rect {
+  height: 64px;
+  width: 8px;
+  /* fill: #14d433; */
+  rx: 1;
+}
+.uptime-bar-rect.active {
+  fill: #14d433; /* Green */
+}
+
+.uptime-bar-rect.inactive {
+  fill: #a3a3a3; /* Gray */
 }

@@ -20,7 +20,7 @@ func GetServiceStatuses(db *sql.DB) ([]models.ServiceStatus, error) {
 		"dev":      "https://dev.jaypatel.link",
 		"app":      "https://app.jaypatel.link",
 		"res":      "https://res.jaypatel.link",
-		"uptime":   "https://uptime.jaypatel.link",
+		// "uptime":   "https://uptime.jaypatel.link",
 	}
 
 	var statuses []models.ServiceStatus
