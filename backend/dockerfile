@@ -1,5 +1,7 @@
 # FROM golang:1.20-alpine
 
+# RUN apk add --no-cache gcc musl-dev
+
 # WORKDIR /app
 
 # COPY go.mod go.sum ./
@@ -7,24 +9,37 @@
 
 # COPY . .
 
-# RUN go build -o main .
+# RUN go build -o main ./cmd
 
 # EXPOSE 8080
 # CMD ["./main"]
-FROM golang:1.20-alpine
 
-# Install necessary tools
+
+# //ARM Architecture
+
+FROM golang:1.20-alpine AS builder
+
 RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
+
 RUN go mod download
 
 COPY . .
-# RUN ls -R /app/mail/templates
 
-RUN go build -o main ./cmd
+RUN GOARCH=arm64 GOOS=linux go build -o main ./cmd
+
+FROM alpine:latest
+
+# WORKDIR /root/
+WORKDIR /app
+
+COPY --from=builder /app/main .
+
+COPY --from=builder /app/mail/templates mail/templates
 
 EXPOSE 8080
+
 CMD ["./main"]

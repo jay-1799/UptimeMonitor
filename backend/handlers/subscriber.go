@@ -48,7 +48,8 @@ func SubscriberHandler(db *sql.DB) http.HandlerFunc {
 		//send the verification link
 		email := requestData.EmailID
 		log.Print(requestData.EmailID)
-		verificationLink := fmt.Sprintf("http://localhost:8080/verify-subscriber?token=%s", token)
+		// verificationLink := fmt.Sprintf("http://localhost:8080/verify-subscriber?token=%s", token)
+		verificationLink := fmt.Sprintf("https://status.jaypatel.link/verify-subscriber?token=%s", token)
 		mailRequest := models.Message{
 			To:           email,
 			TemplateName: "activation",

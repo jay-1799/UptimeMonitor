@@ -10,7 +10,7 @@ import (
 )
 
 func CheckService(db *sql.DB, serviceName, url string) (string, string, string, time.Duration, time.Time, error) {
-	client := &http.Client{Timeout: 20 * time.Second}
+	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := client.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		// todo: function to update downtime timestamp

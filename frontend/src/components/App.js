@@ -15,7 +15,8 @@ const App = () => {
 
   const fetchServiceStatus = async () => {
     try {
-      const response = await fetch("http://localhost:8080/status");
+      // const response = await fetch("http://localhost:8080/status");
+      const response = await fetch("https://status.jaypatel.link/status");
       if (response.ok) {
         const data = await response.json();
         setServices(data);

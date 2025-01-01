@@ -18,13 +18,16 @@ const EmailSubscriptionForm = ({ onClose }) => {
     }
     setEmailValue("");
     try {
-      const response = await fetch("http://localhost:8080/add-subscriber", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ emailID: emailValue }),
-      });
+      const response = await fetch(
+        "https://status.jaypatel.link/add-subscriber",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ emailID: emailValue }),
+        }
+      );
       if (response.ok) {
         alert("Check your inbox for activation link!");
       } else {
