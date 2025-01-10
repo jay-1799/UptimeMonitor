@@ -27,8 +27,8 @@ func AddSubscriberToken(db *sql.DB, emailID string, token string) (msg string, e
 		if err == sql.ErrNoRows {
 			log.Print("No existing subscriber found; inserting new record")
 			_, insertErr := db.Exec(`
-                INSERT INTO subscribers (email, token, is_verified, created_at, updated_at)
-                VALUES ($1, $2, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                INSERT INTO subscribers (email, token, is_verified, updated_at)
+                VALUES ($1, $2, false, CURRENT_TIMESTAMP)
                 `, emailID, token)
 			if insertErr != nil {
 				return "", insertErr
@@ -47,7 +47,7 @@ func AddSubscriberToken(db *sql.DB, emailID string, token string) (msg string, e
 	log.Print("Updating subscriber token")
 	_, updateErr := db.Exec(`
         UPDATE subscribers
-        SET token = $1, updated_at = NOW()
+        SET token = $1, updated_at = CURRENT_TIMESTAMP
         WHERE email = $2
     `, token, emailID)
 	if updateErr != nil {
@@ -101,18 +101,18 @@ const tokenExpirationDuration = 15 * time.Minute
 
 func VerifySubscriber(db *sql.DB, token string) (string, error) {
 	var email string
-	var createdAt time.Time
+	var updatedAt time.Time
 
 	err := db.QueryRow(`
-		SELECT email, created_at
+		SELECT email, updated_at
 		FROM subscribers
 		WHERE token = $1
 		AND is_verified = false`,
 		token,
-	).Scan(&email, &createdAt)
+	).Scan(&email, &updatedAt)
 	log.Print(err)
 	log.Print(email)
-	log.Print(createdAt, email)
+	log.Print(updatedAt)
 	if err == sql.ErrNoRows {
 		return "", errors.New("invalid token")
 	}
@@ -120,7 +120,7 @@ func VerifySubscriber(db *sql.DB, token string) (string, error) {
 		return "", err
 	}
 
-	if time.Since(createdAt) > tokenExpirationDuration {
+	if time.Since(updatedAt) > tokenExpirationDuration {
 		return "", errors.New("token has expired")
 	}
 
