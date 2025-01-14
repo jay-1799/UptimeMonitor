@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "../App.css";
-
+import Login from "./Login";
 import UpdatesDropdown from "./UpdatesDropdown";
 import StatusCard from "./StatusCard";
 import IncidentLogs from "./IncidentLogs";
@@ -35,41 +41,51 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Status Monitoring Dashboard</h1>
-      </header>
-      <UpdatesDropdown />
-      <main className="app-main">
-        <div className="status-grid">
-          {services.map((service, index) => (
-            <div key={index}>
-              <StatusCard
-                // serviceName={service.name}
-                serviceName={
-                  <a
-                    href={service.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="service-link"
-                  >
-                    {service.name}
-                  </a>
-                }
-                status={service.status}
-                uptime={service.uptime}
-                uptimePercentage={service.uptime_percent}
-              />
-              {/* <UptimeBar uptimePercentage={service.uptime_percent} /> */}
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <div className="app">
+              <header className="app-header">
+                <h1>Status Monitoring Dashboard</h1>
+              </header>
+              <UpdatesDropdown />
+              <main className="app-main">
+                <div className="status-grid">
+                  {services.map((service, index) => (
+                    <div key={index}>
+                      <StatusCard
+                        // serviceName={service.name}
+                        serviceName={
+                          <a
+                            href={service.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="service-link"
+                          >
+                            {service.name}
+                          </a>
+                        }
+                        status={service.status}
+                        uptime={service.uptime}
+                        uptimePercentage={service.uptime_percent}
+                      />
+                      {/* <UptimeBar uptimePercentage={service.uptime_percent} /> */}
+                    </div>
+                  ))}
+                </div>
+                <IncidentLogs incidents={incidents} />
+              </main>
+              <footer className="app-footer">
+                <p>&copy; 2024 Jay Patel</p>
+              </footer>
             </div>
-          ))}
-        </div>
-        <IncidentLogs incidents={incidents} />
-      </main>
-      <footer className="app-footer">
-        <p>&copy; 2024 Jay Patel</p>
-      </footer>
-    </div>
+          }
+        />
+      </Routes>
+    </Router>
   );
 };
 

@@ -1,0 +1,91 @@
+.login-container {
+  min-height: 100vh;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-logo {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 9999px;
+  background-color: #2d2d2d;
+}
+
+.login-logo-svg {
+  width: 3rem;
+  height: 3rem;
+  color: #fff;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.login-button-group {
+  width: 100%;
+  max-width: 24rem;
+  margin: 0 auto;
+  display: grid;
+  row-gap: 1rem;
+  padding: 0 1rem;
+}
+
+.login-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font: inherit;
+  border: none;
+}
+
+.login-button-google {
+  background-color: #065f46;
+}
+
+.login-button-google:hover {
+  background-color: #047857;
+}
+
+.login-button-email {
+  background-color: #2d2d2d;
+}
+
+.login-button-email:hover {
+  background-color: #1f1f1f;
+}
+
+.login-button-sso {
+  background-color: #2d2d2d;
+}
+
+.login-button-sso:hover {
+  background-color: #1f1f1f;
+}
+
+.login-sign-up {
+  margin-top: 2rem;
+  color: #fff;
+}
+
+.login-sign-up a {
+  color: #4ade80;
+  text-decoration: none;
+}
+
+.login-sign-up a:hover {
+  color: #86efac;
+}
