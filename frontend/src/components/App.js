@@ -10,6 +10,7 @@ import Login from "./Login";
 import UpdatesDropdown from "./UpdatesDropdown";
 import StatusCard from "./StatusCard";
 import IncidentLogs from "./IncidentLogs";
+import Dashboard from "./Dashboard";
 // import UptimeBar from "./UptimeBar";
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/user/:username" element={<Dashboard />} />
         <Route
           path="/"
           element={
