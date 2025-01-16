@@ -11,6 +11,7 @@ import UpdatesDropdown from "./UpdatesDropdown";
 import StatusCard from "./StatusCard";
 import IncidentLogs from "./IncidentLogs";
 import Dashboard from "./Dashboard";
+import Signup from "./Signup";
 // import UptimeBar from "./UptimeBar";
 
 const App = () => {
@@ -45,7 +46,8 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/user/:username" element={<Dashboard />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/:username" element={<Dashboard />} />
         <Route
           path="/"
           element={

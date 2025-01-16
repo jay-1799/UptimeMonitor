@@ -19,7 +19,8 @@ const Dashboard = () => {
   const fetchServiceStatus = async () => {
     try {
       const response = await fetch(
-        `https://status.jaypatel.link/status/${username}`
+        `https://status.jaypatel.link/status`
+        // `https://status.jaypatel.link/status?${username}`
       ); // Use the dynamic username
       if (response.ok) {
         const data = await response.json();
@@ -74,3 +75,5 @@ const Dashboard = () => {
     </div>
   );
 };
+
+export default Dashboard;
