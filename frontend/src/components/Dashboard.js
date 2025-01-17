@@ -19,11 +19,12 @@ const Dashboard = () => {
   const fetchServiceStatus = async () => {
     try {
       const response = await fetch(
-        `https://status.jaypatel.link/status`
-        // `https://status.jaypatel.link/status?${username}`
-      ); // Use the dynamic username
+        // `https://status.jaypatel.link/status`
+        `http://localhost:8080/get-status-page?${username}`
+      );
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setServices(data);
       } else {
         console.error("Failed to fetch service statuses");

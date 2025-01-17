@@ -20,6 +20,15 @@ CREATE TABLE subscribers (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    link1 VARCHAR(255),
+    link2 VARCHAR(255),
+    link3 VARCHAR(255)
+);
+
 INSERT INTO uptime_logs (service_name, url, status, last_down)
 VALUES
     ('jaypatel', 'https://jaypatel.link', 'UP', '2024-11-15 10:30:00'),

@@ -15,10 +15,10 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   backend:
-    # build:
-    #   context: ./backend
-    #   dockerfile: Dockerfile
-    image: 9574872248/status
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # image: 9574872248/status
     container_name: go-backend
     environment:
       DB_HOST: ${DB_HOST}
@@ -39,15 +39,15 @@ services:
       - postgres
       # - mailhog
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   container_name: react-frontend
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - backend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: react-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
   # mailhog:
   #   image: "mailhog/mailhog:latest"

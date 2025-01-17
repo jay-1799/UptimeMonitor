@@ -49,6 +49,8 @@ func main() {
 	mux.HandleFunc("/history", handlers.HistoryHandler(db))
 	mux.HandleFunc("/add-subscriber", handlers.SubscriberHandler(db))
 	mux.HandleFunc("/verify-subscriber", handlers.VerifySubscriberHandler(db))
+	mux.HandleFunc("/create-status-page", handlers.StatusPageHandler(db))
+	mux.HandleFunc("/get-status-page", handlers.GetStatusPageHandler(db))
 
 	mailHandler := &handlers.MailHandler{Mailer: mailConfig}
 	mux.HandleFunc("/send-mail", mailHandler.SendMail)
