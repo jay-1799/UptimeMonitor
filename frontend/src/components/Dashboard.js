@@ -20,7 +20,7 @@ const Dashboard = () => {
     try {
       const response = await fetch(
         // `https://status.jaypatel.link/status`
-        `http://localhost:8080/get-status-page?${username}`
+        `http://localhost:8080/get-status-page?username=${username}`
       );
       if (response.ok) {
         const data = await response.json();

@@ -4,7 +4,7 @@ import "./Signup.css";
 const Signup = () => {
   const [formData, setFormData] = useState({
     email: "",
-    username: "",
+    userName: "",
     projectLink: "",
   });
 
@@ -14,11 +14,13 @@ const Signup = () => {
     projectLink: false,
   });
 
+  const [statusMessage, setStatusMessage] = useState("");
+
   const validateField = (name, value) => {
     switch (name) {
       case "email":
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-      case "username":
+      case "userName":
         return value.length >= 2;
       case "projectLink":
         try {
@@ -45,9 +47,51 @@ const Signup = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+
+    // Check if all fields are valid before submitting
+    if (
+      !validFields.email ||
+      !validFields.userName ||
+      !validFields.projectLink
+    ) {
+      setStatusMessage("Please ensure all fields are valid before submitting.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/create-status-page", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emailID: formData.email,
+          username: formData.userName,
+          projectLink: formData.projectLink,
+        }),
+      });
+
+      if (response.ok) {
+        setStatusMessage("Status page created successfully!");
+        setFormData({
+          email: "",
+          userName: "",
+          projectLink: "",
+        });
+        setValidFields({
+          email: false,
+          userName: false,
+          projectLink: false,
+        });
+      } else {
+        setStatusMessage("Failed to create status page. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setStatusMessage("An error occurred. Please try again later.");
+    }
   };
 
   return (
@@ -99,6 +143,7 @@ const Signup = () => {
             GET YOUR STATUS PAGE
           </button>
         </form>
+        {statusMessage && <p className="status-message">{statusMessage}</p>}
       </div>
     </div>
   );

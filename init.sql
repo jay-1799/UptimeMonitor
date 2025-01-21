@@ -16,7 +16,6 @@ CREATE TABLE subscribers (
     email VARCHAR(255) NOT NULL UNIQUE,
     token VARCHAR(255) NOT NULL UNIQUE,
     is_verified BOOLEAN DEFAULT FALSE,
-    -- created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -28,6 +27,8 @@ CREATE TABLE users (
     link2 VARCHAR(255),
     link3 VARCHAR(255)
 );
+
+INSERT INTO users (email, username, link1) VALUES('test@gmail.com','test','https://test.com');
 
 INSERT INTO uptime_logs (service_name, url, status, last_down)
 VALUES
